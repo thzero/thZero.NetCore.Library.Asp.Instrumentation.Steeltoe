@@ -58,8 +58,8 @@ namespace thZero.AspNetCore
         }
         #endregion
 
-        #region Protected Methods
-        protected internal string GetMetricName(HttpRequest request)
+        #region Private Methods
+        private string GetMetricName(HttpRequest request)
         {
             PathString epPath = new PathString(_endpoint.Path);
             if (request.Path.StartsWithSegments(epPath, out PathString remaining))
@@ -73,7 +73,7 @@ namespace thZero.AspNetCore
             return null;
         }
 
-        protected internal List<KeyValuePair<string, string>> ParseTags(IQueryCollection query)
+        private List<KeyValuePair<string, string>> ParseTags(IQueryCollection query)
         {
             List<KeyValuePair<string, string>> results = new List<KeyValuePair<string, string>>();
             if (query == null)
@@ -102,7 +102,7 @@ namespace thZero.AspNetCore
             return results;
         }
 
-        protected internal KeyValuePair<string, string>? ParseTag(string kvp)
+        private KeyValuePair<string, string>? ParseTag(string kvp)
         {
             var str = kvp.Split(new char[] { ':' }, 2);
             if (str != null && str.Length == 2)

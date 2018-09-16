@@ -58,8 +58,8 @@ namespace thZero.AspNetCore
         }
         #endregion
 
-        #region Protected Methods
-        protected internal ApplicationMappings GetApplicationMappings(HttpContext context)
+        #region Private Methods
+        private ApplicationMappings GetApplicationMappings(HttpContext context)
         {
             IDictionary<string, IList<MappingDescription>> desc = new Dictionary<string, IList<MappingDescription>>();
             if (_actionDescriptorCollectionProvider != null)
@@ -77,7 +77,7 @@ namespace thZero.AspNetCore
             return new ApplicationMappings(contextMappings);
         }
 
-        protected internal bool IsMappingsRequest(HttpContext context)
+        private bool IsMappingsRequest(HttpContext context)
         {
             if (!context.Request.Method.Equals("GET"))
             {
@@ -88,7 +88,7 @@ namespace thZero.AspNetCore
             return context.Request.Path.Equals(path);
         }
 
-        protected internal IDictionary<string, IList<MappingDescription>> GetMappingDescriptions(ApiDescriptionProviderContext apiContext)
+        private  IDictionary<string, IList<MappingDescription>> GetMappingDescriptions(ApiDescriptionProviderContext apiContext)
         {
             IDictionary<string, IList<MappingDescription>> mappingDescriptions = new Dictionary<string, IList<MappingDescription>>();
             foreach (var desc in apiContext.Results)
@@ -110,7 +110,7 @@ namespace thZero.AspNetCore
             return mappingDescriptions;
         }
 
-        protected internal IRouteDetails GetRouteDetails(ApiDescription desc)
+        private IRouteDetails GetRouteDetails(ApiDescription desc)
         {
             var routeDetails = new AspNetCoreRouteDetails();
 
@@ -148,7 +148,7 @@ namespace thZero.AspNetCore
             return routeDetails;
         }
 
-        protected internal void AddRouteMappingsDescriptions(IRouteMappings routeMappings, IDictionary<string, IList<MappingDescription>> desc)
+        private void AddRouteMappingsDescriptions(IRouteMappings routeMappings, IDictionary<string, IList<MappingDescription>> desc)
         {
             if (routeMappings == null)
             {
@@ -175,7 +175,7 @@ namespace thZero.AspNetCore
             }
         }
 
-        protected internal IRouteDetails GetRouteDetails(Route route)
+        private IRouteDetails GetRouteDetails(Route route)
         {
             var routeDetails = new AspNetCoreRouteDetails();
 
