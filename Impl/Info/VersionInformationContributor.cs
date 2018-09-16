@@ -25,7 +25,7 @@ using thZero.Services;
 
 namespace thZero.AspNetCore
 {
-    public class VersionInformationContributor : IInfoContributor
+    public sealed class VersionInformationContributor : IInfoContributor
     {
         public VersionInformationContributor(IServiceVersionInformation version)
         {
@@ -42,6 +42,7 @@ namespace thZero.AspNetCore
                 full = Version.VersionFormatted,
                 major = Version.Version.Major,
                 minor = Version.Version.Minor,
+                revesion = Version.Version.Revision,
                 build = Version.Version.Build,
                 buildDate = Version.BuildDate
             });

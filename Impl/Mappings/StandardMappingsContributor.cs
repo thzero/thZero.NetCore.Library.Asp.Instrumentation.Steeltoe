@@ -29,7 +29,7 @@ using Steeltoe.Management.Endpoint.Mappings;
 
 namespace thZero.AspNetCore
 {
-    public class StandardMappingsContributor : IMappingsContributor
+    public sealed class StandardMappingsContributor : IMappingsContributor
     {
         private readonly IActionDescriptorCollectionProvider _actionDescriptorCollectionProvider;
         private readonly IEnumerable<IApiDescriptionProvider> _apiDescriptionProviders;

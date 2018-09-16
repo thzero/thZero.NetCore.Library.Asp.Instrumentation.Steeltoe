@@ -35,7 +35,7 @@ namespace thZero.AspNetCore
         #region Public Methods
         public IMetricsResponse Invoke(HttpContext context)
         {
-            return Contributor.Invoke(context);
+            return Contributor?.Invoke(context);
         }
         #endregion
 

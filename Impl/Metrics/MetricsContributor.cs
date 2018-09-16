@@ -22,7 +22,7 @@ using Steeltoe.Management.Endpoint.Metrics;
 
 namespace thZero.AspNetCore
 {
-    public class MetricsContributor : IMetricsContributor
+    public sealed class MetricsContributor : IMetricsContributor
     {
         public MetricsContributor(
             Steeltoe.Management.Endpoint.Metrics.MetricsEndpoint endpoint,

@@ -55,11 +55,11 @@ namespace thZero.AspNetCore
 
             services.AddMappingsActuator(configuration);
 
-            services.AddSingleton<ISteeltoeInstrumentationControllerExtension, SteeltoeInstrumentationControllerExtension>();
-
             services.AddSingleton<MetricsEndpoint, MetricsEndpoint>();
             services.AddSingleton<IMetricsContributor, MetricsContributor>();
             services.AddMetricsActuator(configuration);
+
+            services.AddSingleton<ISteeltoeInstrumentationControllerExtension, SteeltoeInstrumentationControllerExtension>();
         }
 
         public void InitializeSsl(IApplicationBuilder app)
