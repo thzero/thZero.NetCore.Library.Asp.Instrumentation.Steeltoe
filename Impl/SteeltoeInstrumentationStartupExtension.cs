@@ -20,8 +20,11 @@ limitations under the License.
 using System;
 
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 using Steeltoe.Management.Endpoint.Health;
 using Steeltoe.Management.Endpoint.Info;
@@ -33,11 +36,19 @@ namespace thZero.AspNetCore
     public class SteeltoeInstrumentationStartupExtension : IStartupExtension
     {
         #region Public Methods
-        public void InitializeMvcPost(IServiceCollection services, IConfigurationRoot configuration)
+        public virtual void InitializeFinalPre(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
         {
         }
 
-        public void InitializeMvcPre(IServiceCollection services, IConfigurationRoot configuration)
+        public virtual void InitializeFinalPost(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
+        {
+        }
+
+        public virtual void InitializeMvcPost(IServiceCollection services, IConfigurationRoot configuration)
+        {
+        }
+
+        public virtual void InitializeMvcPre(IServiceCollection services, IConfigurationRoot configuration)
         {
             InitiaalizeHealthContributors(services, configuration);
 
@@ -62,15 +73,23 @@ namespace thZero.AspNetCore
             services.AddSingleton<ISteeltoeInstrumentationControllerExtension, SteeltoeInstrumentationControllerExtension>();
         }
 
-        public void InitializeSsl(IApplicationBuilder app)
+        public virtual void InitializeRoutesBuilderPost(IRouteBuilder routes)
         {
         }
 
-        public void InitializeStaticPost(IApplicationBuilder app)
+        public virtual void InitializeRoutesBuilderPre(IRouteBuilder routes)
         {
         }
 
-        public void InitializeStaticPre(IApplicationBuilder app)
+        public virtual void InitializeSsl(IApplicationBuilder app)
+        {
+        }
+
+        public virtual void InitializeStaticPost(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp)
+        {
+        }
+
+        public virtual void InitializeStaticPre(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp)
         {
         }
         #endregion
