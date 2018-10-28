@@ -30,7 +30,7 @@ using Steeltoe.Management.Endpoint.Metrics;
 
 namespace thZero.AspNetCore
 {
-    public class SteeltoeInstrumentationControllerExtension : ISteeltoeInstrumentationControllerExtension
+    public sealed class SteeltoeInstrumentationControllerExtension : ISteeltoeInstrumentationControllerExtension
     {
         public SteeltoeInstrumentationControllerExtension(HealthEndpoint endpointHealth, InfoEndpoint endpointInfo, MappingsEndpoint endpointMappings, MetricsEndpoint endpointMetrics)
         {
@@ -79,10 +79,10 @@ namespace thZero.AspNetCore
         #endregion
 
         #region Protected Properties
-        protected HealthEndpoint EndpointHealth { get; private set; }
-        protected InfoEndpoint EndpointInfo { get; private set; }
-        protected MappingsEndpoint EndpointMappings { get; private set; }
-        protected MetricsEndpoint EndpointMetrics { get; private set; }
+        private HealthEndpoint EndpointHealth { get; set; }
+        private InfoEndpoint EndpointInfo { get; set; }
+        private MappingsEndpoint EndpointMappings { get; set; }
+        private MetricsEndpoint EndpointMetrics { get; set; }
         #endregion
     }
 }
