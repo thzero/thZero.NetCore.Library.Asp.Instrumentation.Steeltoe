@@ -36,33 +36,61 @@ namespace thZero.AspNetCore
     public class SteeltoeInstrumentationStartupExtension : IStartupExtension
     {
         #region Public Methods
-        public virtual void InitializeFinalPre(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
+        public virtual void ConfigureInitializePost(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp)
         {
         }
 
-        public virtual void InitializeFinalPost(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
+        public virtual void ConfigureInitializePre(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp)
         {
         }
 
-        public virtual void InitializeMvcPost(IServiceCollection services, IConfigurationRoot configuration)
+        public virtual void ConfigureInitializeFinalPre(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
         {
         }
 
-        public virtual void InitializeMvcPre(IServiceCollection services, IConfigurationRoot configuration)
+        public virtual void ConfigureInitializeFinalPost(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
         {
-            InitiaalizeHealthContributors(services, configuration);
+        }
+
+        public virtual void ConfigureInitializeRoutesBuilderPost(IRouteBuilder routes)
+        {
+        }
+
+        public virtual void ConfigureInitializeRoutesBuilderPre(IRouteBuilder routes)
+        {
+        }
+
+        public virtual void ConfigureInitializeSsl(IApplicationBuilder app)
+        {
+        }
+
+        public virtual void ConfigureInitializeStaticPost(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp)
+        {
+        }
+
+        public virtual void ConfigureInitializeStaticPre(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp)
+        {
+        }
+
+        public virtual void ConfigureServicesMvcPost(IServiceCollection services, IConfigurationRoot configuration)
+        {
+        }
+
+        public virtual void ConfigureServicesMvcPre(IServiceCollection services, IConfigurationRoot configuration)
+        {
+            ConfigureInitializeHealthContributors(services, configuration);
 
             services.AddHealthActuator(configuration);
 
             services.AddSingleton<IInfoContributor, VersionInformationContributor>();
-            InitiaalizeInfoContributors(services, configuration);
+            ConfigureInitializeInfoContributors(services, configuration);
 
             // Add custom info contributor
             services.AddInfoActuator(configuration);
 
             services.AddSingleton<MappingsEndpoint, MappingsEndpoint>();
-            services.AddSingleton<IMappingsContributor, StandardMappingsContributor>(); 
-            InitiaalizeMappingsContributors(services, configuration);
+            services.AddSingleton<IMappingsContributor, StandardMappingsContributor>();
+            ConfigureInitializeMappingsContributors(services, configuration);
 
             services.AddMappingsActuator(configuration);
 
@@ -72,38 +100,18 @@ namespace thZero.AspNetCore
 
             services.AddSingleton<ISteeltoeInstrumentationControllerExtension, SteeltoeInstrumentationControllerExtension>();
         }
-
-        public virtual void InitializeRoutesBuilderPost(IRouteBuilder routes)
-        {
-        }
-
-        public virtual void InitializeRoutesBuilderPre(IRouteBuilder routes)
-        {
-        }
-
-        public virtual void InitializeSsl(IApplicationBuilder app)
-        {
-        }
-
-        public virtual void InitializeStaticPost(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp)
-        {
-        }
-
-        public virtual void InitializeStaticPre(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp)
-        {
-        }
         #endregion
 
         #region Protected Methods
-        protected virtual void InitiaalizeHealthContributors(IServiceCollection services, IConfigurationRoot configuration)
+        protected virtual void ConfigureInitializeHealthContributors(IServiceCollection services, IConfigurationRoot configuration)
         {
         }
 
-        protected virtual void InitiaalizeInfoContributors(IServiceCollection services, IConfigurationRoot configuration)
+        protected virtual void ConfigureInitializeInfoContributors(IServiceCollection services, IConfigurationRoot configuration)
         {
         }
 
-        protected virtual void InitiaalizeMappingsContributors(IServiceCollection services, IConfigurationRoot configuration)
+        protected virtual void ConfigureInitializeMappingsContributors(IServiceCollection services, IConfigurationRoot configuration)
         {
         }
         #endregion
