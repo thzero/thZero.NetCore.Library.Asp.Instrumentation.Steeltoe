@@ -19,6 +19,7 @@ limitations under the License.
 
 using System;
 
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -32,9 +33,9 @@ namespace thZero.AspNetCore
     public class SteeltoeInstrumentationStartupExtension : BaseStartupExtension
     {
         #region Public Methods
-        public override void ConfigureServicesInitializeMvcPre(IServiceCollection services, IConfiguration configuration)
+        public override void ConfigureServicesInitializeMvcPre(IServiceCollection services, IHostingEnvironment env, IConfiguration configuration)
         {
-            base.ConfigureServicesInitializeMvcPre(services, configuration);
+            base.ConfigureServicesInitializeMvcPre(services, env, configuration);
 
             ConfigureInitializeHealthContributors(services, configuration);
 
