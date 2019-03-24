@@ -41,16 +41,16 @@ namespace thZero.AspNetCore
         }
 
         #region Public Methods
-        public HealthCheckResult GetHealth()
+        public HealthCheckResult GetHealth(HttpContext context)
         {
             if (EndpointHealth == null)
                 return null;
 
-            var results = EndpointHealth.Invoke();
+            var results = EndpointHealth.Invoke(new CoreSecurityContext(context));
             return results;
         }
 
-        public IDictionary<string, object> GetInfo()
+        public IDictionary<string, object> GetInfo(HttpContext context)
         {
             if (EndpointInfo == null)
                 return null;
@@ -78,7 +78,7 @@ namespace thZero.AspNetCore
         }
         #endregion
 
-        #region Protected Properties
+        #region Private Properties
         private HealthEndpoint EndpointHealth { get; set; }
         private InfoEndpoint EndpointInfo { get; set; }
         private MappingsEndpoint EndpointMappings { get; set; }

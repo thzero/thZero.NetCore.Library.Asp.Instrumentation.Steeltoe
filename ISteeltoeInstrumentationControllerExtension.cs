@@ -26,13 +26,12 @@ using Steeltoe.Common.HealthChecks;
 using Steeltoe.Management.Endpoint.Mappings;
 using Steeltoe.Management.Endpoint.Metrics;
 
-
 namespace thZero.AspNetCore
 {
     public interface ISteeltoeInstrumentationControllerExtension : IInstrumentationControllerExtension
     {
-        HealthCheckResult GetHealth();
-        IDictionary<string, object> GetInfo();
+        HealthCheckResult GetHealth(HttpContext context);
+        IDictionary<string, object> GetInfo(HttpContext context);
         ApplicationMappings GetMappings(HttpContext context);
         IMetricsResponse GetMetrics(HttpContext context);
     }
