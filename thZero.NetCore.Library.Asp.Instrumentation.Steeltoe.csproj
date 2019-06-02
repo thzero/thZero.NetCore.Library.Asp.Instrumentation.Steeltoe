@@ -31,7 +31,7 @@
     <PackageReference Include="Steeltoe.Management.EndpointBase" Version="2.2.0" />
     <PackageReference Include="Steeltoe.Management.EndpointCore" Version="2.2.0" />
     <PackageReference Include="System.Runtime.Serialization.Json" Version="4.3.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
   </ItemGroup>
 
   <ItemGroup>
