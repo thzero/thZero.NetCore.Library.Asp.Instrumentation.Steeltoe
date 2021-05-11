@@ -29,6 +29,11 @@ namespace thZero.AspNetCore
             _context = context;
         }
 
+        public string[] GetRequestComponents()
+        {
+            throw new NotImplementedException();
+        }
+
         public bool HasClaim(EndpointClaim claim)
         {
             return _context != null

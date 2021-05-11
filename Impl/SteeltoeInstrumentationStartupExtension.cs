@@ -1,6 +1,6 @@
 ﻿/* ------------------------------------------------------------------------- *
 thZero.NetCore.Library.Asp.Instrumentation.Steeltoe
-Copyright (C) 2016-2019 thZero.com
+Copyright (C) 2016-2021 thZero.com
 
 <development [at] thzero [dot] com>
 
@@ -27,13 +27,14 @@ using Steeltoe.Management.Endpoint.Health;
 using Steeltoe.Management.Endpoint.Info;
 using Steeltoe.Management.Endpoint.Mappings;
 using Steeltoe.Management.Endpoint.Metrics;
+using Steeltoe.Management.Info;
 
 namespace thZero.AspNetCore
 {
     public class SteeltoeInstrumentationStartupExtension : BaseStartupExtension
     {
         #region Public Methods
-        public override void ConfigureServicesInitializeMvcPre(IServiceCollection services, IHostingEnvironment env, IConfiguration configuration)
+        public override void ConfigureServicesInitializeMvcPre(IServiceCollection services, IWebHostEnvironment env, IConfiguration configuration)
         {
             base.ConfigureServicesInitializeMvcPre(services, env, configuration);
 
