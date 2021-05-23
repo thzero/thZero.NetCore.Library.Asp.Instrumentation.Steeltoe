@@ -17,8 +17,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
  * ------------------------------------------------------------------------- */
 
-using System;
-
 using Steeltoe.Management.Info;
 using thZero.Services;
 
@@ -37,7 +35,8 @@ namespace thZero.AspNetCore
             if (Version == null)
                 return;
 
-            builder.WithInfo("version", new {
+            builder.WithInfo("version", new
+            {
                 full = Version.VersionFormatted,
                 major = Version.Version.Major,
                 minor = Version.Version.Minor,

@@ -17,14 +17,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
  * ------------------------------------------------------------------------- */
 
-using System;
-using System.Collections.Generic;
-
 using Microsoft.AspNetCore.Http;
-
 using Steeltoe.Common.HealthChecks;
 using Steeltoe.Management.Endpoint.Mappings;
 using Steeltoe.Management.Endpoint.Metrics;
+using System.Collections.Generic;
 
 namespace thZero.AspNetCore
 {
