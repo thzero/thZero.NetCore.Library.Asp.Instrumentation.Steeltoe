@@ -29,7 +29,8 @@ namespace thZero.AspNetCore
 
         public string[] GetRequestComponents()
         {
-            throw new NotImplementedException();
+            //return new string[] { "health", "liveness","readiness" };
+            return null;
         }
 
         public bool HasClaim(EndpointClaim claim)

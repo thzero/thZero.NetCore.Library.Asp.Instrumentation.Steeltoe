@@ -59,7 +59,9 @@ namespace thZero.AspNetCore
         #region Private Methods
         private string GetMetricName(HttpRequest request)
         {
-            PathString epPath = new PathString(_endpoint.Path);
+            string path = _endpoint.Path;
+            path = path.StartsWith("/") ? path : "/" + path;
+            PathString epPath = new PathString(path);
             if (request.Path.StartsWithSegments(epPath, out PathString remaining))
             {
                 if (remaining.HasValue)

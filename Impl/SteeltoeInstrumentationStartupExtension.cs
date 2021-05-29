@@ -17,10 +17,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
  * ------------------------------------------------------------------------- */
 
+using System;
+using System.Collections.Generic;
+
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
+using Steeltoe.Common.HealthChecks;
+using Steeltoe.Management.Endpoint;
 using Steeltoe.Management.Endpoint.Health;
 using Steeltoe.Management.Endpoint.Info;
 using Steeltoe.Management.Endpoint.Mappings;
@@ -36,8 +41,11 @@ namespace thZero.AspNetCore
         {
             base.ConfigureServicesInitializeMvcPre(services, env, configuration);
 
-            ConfigureInitializeHealthContributors(services, configuration);
+            var contributors = new List<IHealthContributor>();
+            ConfigureInitializeHealthContributors(services, contributors);
+            services.AddSingleton<IEnumerable<IHealthContributor>>(contributors);
 
+            services.AddSingleton<HealthEndpoint, HealthEndpoint>();
             services.AddHealthActuator(configuration);
 
             services.AddSingleton<IInfoContributor, VersionInformationContributor>();
@@ -61,8 +69,9 @@ namespace thZero.AspNetCore
         #endregion
 
         #region Protected Methods
-        protected virtual void ConfigureInitializeHealthContributors(IServiceCollection services, IConfiguration configuration)
+        protected virtual void ConfigureInitializeHealthContributors(IServiceCollection services, ICollection<IHealthContributor> contributors)
         {
+            contributors.Add(new DiagnsoticHealthContributor());
         }
 
         protected virtual void ConfigureInitializeInfoContributors(IServiceCollection services, IConfiguration configuration)

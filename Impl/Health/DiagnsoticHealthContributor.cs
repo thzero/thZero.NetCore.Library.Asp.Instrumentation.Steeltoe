@@ -37,7 +37,7 @@ namespace thZero.AspNetCore
         #endregion 
 
         #region PUblic Properties
-        public string Id => "CustomerHealthContributor";
+        public string Id => "health";
         #endregion 
     }
 }
