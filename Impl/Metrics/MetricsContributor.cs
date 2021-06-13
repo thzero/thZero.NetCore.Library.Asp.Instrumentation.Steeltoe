@@ -33,10 +33,12 @@ namespace thZero.AspNetCore
         #region Public Methods
         public IMetricsResponse Invoke(HttpContext context)
         {
+            const string Declaration = "Invoke";
+
             HttpRequest request = context.Request;
             HttpResponse response = context.Response;
 
-            _logger?.LogDebug("Incoming path: {0}", request.Path.Value);
+            _logger?.LogDebug2(Declaration, "Incoming path: {0}", request.Path.Value);
 
             string metricName = GetMetricName(request);
             if (!string.IsNullOrEmpty(metricName))
