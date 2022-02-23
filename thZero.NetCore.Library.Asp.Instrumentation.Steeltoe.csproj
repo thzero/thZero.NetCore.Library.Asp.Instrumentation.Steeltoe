@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net5.0</TargetFramework>
+		<TargetFramework>net6.0</TargetFramework>
 		<AssemblyName>thZero.NetCore.Library.Asp.Instrumentation.Steeltoe</AssemblyName>
 		<PackageId>thZero.NetCore.Library.Asp.Instrumentation.Steeltoe</PackageId>
 		<Description></Description>
