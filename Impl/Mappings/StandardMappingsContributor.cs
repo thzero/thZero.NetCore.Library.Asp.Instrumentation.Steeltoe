@@ -232,9 +232,9 @@ namespace thZero.AspNetCore
         #endregion
 
         #region Constants
-        private const String ValueCoreRouteHandler = "CoreRouteHandler";
-        private const String ValueGroupName = "Steeltoe";
-        private const String ValueHttpMethod = "httpMethod"; 
+        private const string ValueCoreRouteHandler = "CoreRouteHandler";
+        private const string ValueGroupName = "Steeltoe";
+        private const string ValueHttpMethod = "httpMethod"; 
         #endregion
     }
 }
