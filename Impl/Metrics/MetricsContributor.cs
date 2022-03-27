@@ -74,17 +74,18 @@ namespace thZero.AspNetCore
 
             foreach (var q in query)
             {
-                if (q.Key.Equals(KeyTag, StringComparison.InvariantCultureIgnoreCase))
+                if (!q.Key.Equals(KeyTag, StringComparison.InvariantCultureIgnoreCase))
+                    continue;
+
+                KeyValuePair<string, string>? pair;
+                foreach (var kvp in q.Value)
                 {
-                    foreach (var kvp in q.Value)
-                    {
-                        var pair = ParseTag(kvp);
-                        if (pair != null)
-                        {
-                            if (!results.Contains(pair.Value))
-                                results.Add(pair.Value);
-                        }
-                    }
+                    pair = ParseTag(kvp);
+                    if (pair == null)
+                        continue;
+
+                    if (!results.Contains(pair.Value))
+                        results.Add(pair.Value);
                 }
             }
 
