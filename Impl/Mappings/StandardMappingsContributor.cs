@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Collections.Generic;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
@@ -21,8 +24,8 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Routing.Constraints;
 using Microsoft.Extensions.Logging;
+
 using Steeltoe.Management.Endpoint.Mappings;
-using System.Collections.Generic;
 
 namespace thZero.AspNetCore
 {
@@ -30,7 +33,9 @@ namespace thZero.AspNetCore
     {
         private readonly IActionDescriptorCollectionProvider _actionDescriptorCollectionProvider;
         private readonly IEnumerable<IApiDescriptionProvider> _apiDescriptionProviders;
+#pragma warning disable IDE0052 // Remove unread private members
         private readonly IMappingsOptions _options;
+#pragma warning restore IDE0052 // Remove unread private members
         private readonly IRouteMappings _routeMappings;
 
         public StandardMappingsContributor(
@@ -50,13 +55,13 @@ namespace thZero.AspNetCore
         #region Public Methods
         public ApplicationMappings Invoke(HttpContext context)
         {
-            ApplicationMappings result = GetApplicationMappings(context);
+            ApplicationMappings result = GetApplicationMappings();
             return result;
         }
         #endregion
 
         #region Private Methods
-        private ApplicationMappings GetApplicationMappings(HttpContext context)
+        private ApplicationMappings GetApplicationMappings()
         {
             IDictionary<string, IList<MappingDescription>> desc = new Dictionary<string, IList<MappingDescription>>();
             if (_actionDescriptorCollectionProvider != null)
@@ -66,26 +71,24 @@ namespace thZero.AspNetCore
             }
 
             if (_routeMappings != null)
-            {
                 AddRouteMappingsDescriptions(_routeMappings, desc);
-            }
 
             var contextMappings = new ContextMappings(desc);
             return new ApplicationMappings(contextMappings);
         }
 
-        private bool IsMappingsRequest(HttpContext context)
-        {
-            if (!context.Request.Method.Equals("GET"))
-            {
-                return false;
-            }
+        //private bool IsMappingsRequest(HttpContext context)
+        //{
+        //    if (!context.Request.Method.Equals("GET"))
+        //    {
+        //        return false;
+        //    }
 
-            PathString path = new PathString(_options.Path);
-            return context.Request.Path.Equals(path);
-        }
+        //    PathString path = new PathString(_options.Path);
+        //    return context.Request.Path.Equals(path);
+        //}
 
-        private IDictionary<string, IList<MappingDescription>> GetMappingDescriptions(ApiDescriptionProviderContext apiContext)
+        private static IDictionary<string, IList<MappingDescription>> GetMappingDescriptions(ApiDescriptionProviderContext apiContext)
         {
             IDictionary<string, IList<MappingDescription>> mappingDescriptions = new Dictionary<string, IList<MappingDescription>>();
             foreach (var desc in apiContext.Results)
@@ -107,11 +110,12 @@ namespace thZero.AspNetCore
             return mappingDescriptions;
         }
 
-        private IRouteDetails GetRouteDetails(ApiDescription desc)
+        private static IRouteDetails GetRouteDetails(ApiDescription desc)
         {
-            var routeDetails = new AspNetCoreRouteDetails();
-
-            routeDetails.HttpMethods = GetHttpMethods(desc);
+            var routeDetails = new AspNetCoreRouteDetails
+            {
+                HttpMethods = GetHttpMethods(desc)
+            };
 
             if (desc.ActionDescriptor.AttributeRouteInfo?.Template != null)
             {
@@ -123,85 +127,74 @@ namespace thZero.AspNetCore
                 routeDetails.RouteTemplate = $"/{cdesc.ControllerName}/{cdesc.ActionName}";
             }
 
-            List<string> produces = new List<string>();
+            List<string> produces = new();
             foreach (var respTypes in desc.SupportedResponseTypes)
             {
                 foreach (var format in respTypes.ApiResponseFormats)
-                {
                     produces.Add(format.MediaType);
-                }
             }
 
             routeDetails.Produces = produces;
 
-            List<string> consumes = new List<string>();
+            List<string> consumes = new();
             foreach (var reqTypes in desc.SupportedRequestFormats)
-            {
                 consumes.Add(reqTypes.MediaType);
-            }
 
             routeDetails.Consumes = consumes;
 
             return routeDetails;
         }
 
-        private void AddRouteMappingsDescriptions(IRouteMappings routeMappings, IDictionary<string, IList<MappingDescription>> desc)
+        private static void AddRouteMappingsDescriptions(IRouteMappings routeMappings, IDictionary<string, IList<MappingDescription>> desc)
         {
             if (routeMappings == null)
-            {
                 return;
-            }
 
             foreach (var router in routeMappings.Routers)
             {
-                var route = router as Route;
-                if (route != null)
+                if (router is Route route)
                 {
                     var details = GetRouteDetails(route);
-                    desc.TryGetValue("CoreRouteHandler", out IList<MappingDescription> mapList);
+                    desc.TryGetValue(ValueCoreRouteHandler, out IList<MappingDescription> mapList);
 
                     if (mapList == null)
                     {
                         mapList = new List<MappingDescription>();
-                        desc.Add("CoreRouteHandler", mapList);
+                        desc.Add(ValueCoreRouteHandler, mapList);
                     }
 
-                    var mapDesc = new MappingDescription("CoreRouteHandler", details);
+                    var mapDesc = new MappingDescription(ValueCoreRouteHandler, details);
                     mapList.Add(mapDesc);
                 }
             }
         }
 
-        private IRouteDetails GetRouteDetails(Route route)
+        private static IRouteDetails GetRouteDetails(Route route)
         {
-            var routeDetails = new AspNetCoreRouteDetails();
-
-            routeDetails.HttpMethods = GetHttpMethods(route);
-            routeDetails.RouteTemplate = route.RouteTemplate;
+            var routeDetails = new AspNetCoreRouteDetails
+            {
+                HttpMethods = GetHttpMethods(route),
+                RouteTemplate = route.RouteTemplate
+            };
 
             return routeDetails;
         }
 
-        private IList<string> GetHttpMethods(ApiDescription desc)
+        private static IList<string> GetHttpMethods(ApiDescription desc)
         {
             if (!string.IsNullOrEmpty(desc.HttpMethod))
-            {
                 return new List<string>() { desc.HttpMethod };
-            }
 
             return null;
         }
 
-        private IList<string> GetHttpMethods(Route route)
+        private static IList<string> GetHttpMethods(Route route)
         {
             var constraints = route.Constraints;
-            if (constraints.TryGetValue("httpMethod", out IRouteConstraint routeConstraint))
+            if (constraints.TryGetValue(ValueHttpMethod, out IRouteConstraint routeConstraint))
             {
-                var methodConstraint = routeConstraint as HttpMethodRouteConstraint;
-                if (methodConstraint != null)
-                {
+                if (routeConstraint is HttpMethodRouteConstraint methodConstraint)
                     return methodConstraint.AllowedMethods;
-                }
             }
 
             return null;
@@ -210,16 +203,14 @@ namespace thZero.AspNetCore
         private ApiDescriptionProviderContext GetApiDescriptions(IReadOnlyList<ActionDescriptor> actionDescriptors)
         {
             if (actionDescriptors == null)
-            {
                 return new ApiDescriptionProviderContext(new List<ActionDescriptor>());
-            }
 
             foreach (var action in actionDescriptors)
             {
                 // This is required in order for OnProvidersExecuting() to work
                 var apiExplorerActionData = new ApiDescriptionActionData()
                 {
-                    GroupName = "Steeltoe"
+                    GroupName = ValueGroupName
                 };
 
                 action.SetProperty(apiExplorerActionData);
@@ -228,16 +219,22 @@ namespace thZero.AspNetCore
             var context = new ApiDescriptionProviderContext(actionDescriptors);
 
             foreach (var provider in _apiDescriptionProviders)
-            {
                 provider.OnProvidersExecuting(context);
-            }
 
             return context;
         }
         #endregion
 
         #region Fields
-        private ILogger<StandardMappingsContributor> _logger;
+#pragma warning disable IDE0052 // Remove unread private members
+        private readonly ILogger<StandardMappingsContributor> _logger;
+#pragma warning restore IDE0052 // Remove unread private members
+        #endregion
+
+        #region Constants
+        private const String ValueCoreRouteHandler = "CoreRouteHandler";
+        private const String ValueGroupName = "Steeltoe";
+        private const String ValueHttpMethod = "httpMethod"; 
         #endregion
     }
 }

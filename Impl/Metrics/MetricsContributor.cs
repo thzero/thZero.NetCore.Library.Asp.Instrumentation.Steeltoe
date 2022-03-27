@@ -12,11 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
-using Steeltoe.Management.Endpoint.Metrics;
 using System;
 using System.Collections.Generic;
+
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
+
+using Steeltoe.Management.Endpoint.Metrics;
 
 namespace thZero.AspNetCore
 {
@@ -36,25 +38,16 @@ namespace thZero.AspNetCore
             const string Declaration = "Invoke";
 
             HttpRequest request = context.Request;
-            HttpResponse response = context.Response;
 
             _logger?.LogDebug2(Declaration, "Incoming path: {0}", request.Path.Value);
 
             string metricName = GetMetricName(request);
             if (!string.IsNullOrEmpty(metricName))
-            {
                 // GET /metrics/{metricName}?tag=key:value&tag=key:value
-                var tags = ParseTags(request.Query);
-                var metricRequest = new MetricsRequest(metricName, tags);
-                var serialInfo = _endpoint.Invoke(metricRequest);
-                return serialInfo;
-            }
-            else
-            {
-                // GET /metrics
-                var serialInfo = _endpoint.Invoke(null);
-                return serialInfo;
-            }
+                return _endpoint.Invoke(new MetricsRequest(metricName, ParseTags(request.Query)));
+
+            // GET /metrics
+            return _endpoint.Invoke(null);
         }
         #endregion
 
@@ -62,30 +55,26 @@ namespace thZero.AspNetCore
         private string GetMetricName(HttpRequest request)
         {
             string path = _endpoint.Path;
-            path = path.StartsWith("/") ? path : "/" + path;
-            PathString epPath = new PathString(path);
+            path = path.StartsWith(DelimiterSlash) ? path : DelimiterSlash + path;
+            PathString epPath = new(path);
             if (request.Path.StartsWithSegments(epPath, out PathString remaining))
             {
                 if (remaining.HasValue)
-                {
-                    return remaining.Value.TrimStart('/');
-                }
+                    return remaining.Value.TrimStart(DelimiterSlashChar);
             }
 
             return null;
         }
 
-        private List<KeyValuePair<string, string>> ParseTags(IQueryCollection query)
+        private static List<KeyValuePair<string, string>> ParseTags(IQueryCollection query)
         {
-            List<KeyValuePair<string, string>> results = new List<KeyValuePair<string, string>>();
+            List<KeyValuePair<string, string>> results = new();
             if (query == null)
-            {
                 return results;
-            }
 
             foreach (var q in query)
             {
-                if (q.Key.Equals("tag", StringComparison.InvariantCultureIgnoreCase))
+                if (q.Key.Equals(KeyTag, StringComparison.InvariantCultureIgnoreCase))
                 {
                     foreach (var kvp in q.Value)
                     {
@@ -93,9 +82,7 @@ namespace thZero.AspNetCore
                         if (pair != null)
                         {
                             if (!results.Contains(pair.Value))
-                            {
                                 results.Add(pair.Value);
-                            }
                         }
                     }
                 }
@@ -104,21 +91,27 @@ namespace thZero.AspNetCore
             return results;
         }
 
-        private KeyValuePair<string, string>? ParseTag(string kvp)
+        private static KeyValuePair<string, string>? ParseTag(string kvp)
         {
-            var str = kvp.Split(new char[] { ':' }, 2);
-            if (str != null && str.Length == 2)
-            {
+            string[] str = kvp.Split(new char[] { DelimiterColonChar }, 2);
+            if ((str != null) && (str.Length == 2))
                 return new KeyValuePair<string, string>(str[0], str[1]);
-            }
 
             return null;
         }
         #endregion
 
         #region Fields
-        private Steeltoe.Management.Endpoint.Metrics.MetricsEndpoint _endpoint;
-        private ILogger<MetricsContributor> _logger;
+        private readonly Steeltoe.Management.Endpoint.Metrics.MetricsEndpoint _endpoint;
+        private readonly ILogger<MetricsContributor> _logger;
+        #endregion
+
+        #region Constants
+        private const char DelimiterColonChar = ':';
+        private const char DelimiterSlashChar = '/';
+        private const string DelimiterSlash = "/";
+
+        private const string KeyTag = "tag";
         #endregion
     }
 }
